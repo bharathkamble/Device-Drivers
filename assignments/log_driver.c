@@ -157,74 +157,6 @@ static ssize_t device_write(struct file *file, const char __user *user_buffer, s
 
     new->msg=kmalloc(strlen(device_buffer)+1,GFP_KERNEL);
     strcpy(new->msg,device_buffer);
-/*    printk("time: %s\n",__TIME__);
-    new->time=kmalloc(20,GFP_KERNEL);
-    if(h_time.tm_mday>9)
-    {
-	new->time[0]=(h_time.tm_mday/10)+48;
-	new->time[1]=(h_time.tm_mday%10)+48;
-    }
-    else
-    {
-	new->time[0]=48;
-	new->time[1]=h_time.tm_mday+48;
-    }
-    new->time[2]='/';
-    if(h_time.tm_mon>9)
-    {
-	new->time[3]=(h_time.tm_mon/10)+48;
-	new->time[4]=(h_time.tm_mon%10)+48;
-    }
-    else
-    {
-	new->time[3]=48;
-	new->time[4]=h_time.tm_mon+48;
-    }
-    new->time[5]='/';
-    h_time.tm_year+=1900;
-    new->time[6]=(h_time.tm_year/1000)+48;
-    h_time.tm_year%=1000;
-    new->time[7]=(h_time.tm_year/100)+48;
-    h_time.tm_year%=100;
-    new->time[9]=(h_time.tm_year/10)+48;
-    h_time.tm_year%=10;
-    new->time[10]=(h_time.tm_year)+48;
-    new->time[11]=' ';
-    if(h_time.tm_hour>9)
-    {
-	new->time[12]=(h_time.tm_hour/10)+48;
-	new->time[13]=(h_time.tm_hour%10)+48;
-    }
-    else
-    {
-	new->time[12]=48;
-	new->time[13]=h_time.tm_hour+48;
-    }
-    new->time[14]=':';
-    if(h_time.tm_min>9)
-    {
-	new->time[15]=(h_time.tm_min/10)+48;
-	new->time[16]=(h_time.tm_min%10)+48;
-    }
-    else
-    {
-	new->time[15]=48;
-	new->time[16]=h_time.tm_min+48;
-    }
-    new->time[17]=':';
-    if(h_time.tm_sec>9)
-    {
-	new->time[18]=(h_time.tm_sec/10)+48;
-	new->time[19]=(h_time.tm_sec%10)+48;
-    }
-    else
-    {
-	new->time[18]=48;
-	new->time[19]=h_time.tm_sec+48;
-    }
-    new->time[20]='\n';
-  */  
- 
 
     printk(KERN_INFO "simple_device: Received %zu bytes from the user\n", size);
     return size;
@@ -252,5 +184,5 @@ module_init(simple_driver_init);
 module_exit(simple_driver_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Your Name");
+MODULE_AUTHOR("Bharath");
 MODULE_DESCRIPTION("A Simple Linux Device Driver");

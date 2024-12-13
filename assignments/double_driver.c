@@ -3,13 +3,13 @@
 #include <linux/fs.h>
 #include <linux/uaccess.h> // For copy_to_user and copy_from_user
 
-#define DEVICE_NAME "sqrt_device"
+#define DEVICE_NAME "double_device"
 #define BUFFER_SIZE 1024
 
 static int major_number;
 static char device_buffer[BUFFER_SIZE];
 static int open_count = 0;
-static int num;
+static int dbl,pre;
 
 // Function prototypes for device operations
 static int device_open(struct inode *inode, struct file *file);
@@ -59,7 +59,7 @@ static ssize_t device_read(struct file *file, char __user *user_buffer, size_t s
 
 // Called when data is written to the device
 static ssize_t device_write(struct file *file, const char __user *user_buffer, size_t size, loff_t *offset) {
-    int i,j;
+    int i;
     if (size > BUFFER_SIZE - 1) // Limit size to buffer capacity
         size = BUFFER_SIZE - 1;
 
@@ -69,25 +69,22 @@ static ssize_t device_write(struct file *file, const char __user *user_buffer, s
 
     device_buffer[size] = '\0'; // Null-terminate the string
     printk(KERN_INFO "simple_device: Received %zu bytes from the user\n", size);
-    
-    for(i=0;i<size-1;i++)
+    for(i=size-1;i>=0;i--)
     {
-	    num=(num*10)+(device_buffer[i]-48);
+	dbl=(device_buffer[i]-48)*2;
+	device_buffer[i]=(dbl%10)+48;
+	if(pre>=10)
+		device_buffer[i]=device_buffer[i]+1;
+	pre=dbl;
     }
-
-    num*=num;
-    i=0;
-
-    for(j=1;num/j;j=j*10);
-    while(num)
+    if(pre>=10)
     {
-	j/=10;
-	device_buffer[i]=(num/j)+48;
-	num%=j;
-	i++;
+	for(i=size;i>=0;i--)
+		device_buffer[i+1]=device_buffer[i];
+	device_buffer[0]=49;
+	size++;
     }
-    device_buffer[i]=0;
-    size=i;
+    device_buffer[size-1]='\0';
     return size;
 }
 
@@ -112,5 +109,5 @@ module_init(simple_driver_init);
 module_exit(simple_driver_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Your Name");
+MODULE_AUTHOR("Bharath");
 MODULE_DESCRIPTION("A Simple Linux Device Driver");
